@@ -1,7 +1,6 @@
 package ru.netology.delivery.data;
 
 import com.github.javafaker.Faker;
-import lombok.Value;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,7 +19,7 @@ public class DataGenerator {
         return date.format(formatter);
     }
 
-    public static String generateCity(Faker faker) {
+    public static String generateCity() {
         String[] cities = {
                 "Москва", "Санкт-Петербург", "Казань", "Екатеринбург",
                 "Новосибирск", "Краснодар", "Владивосток", "Сочи",
@@ -30,34 +29,50 @@ public class DataGenerator {
         return cities[random.nextInt(cities.length)];
     }
 
-    public static String generateName(Faker faker) {
+    public static String generateName(String locale) {
+        Faker faker = new Faker(new Locale(locale));
         return faker.name().lastName() + " " + faker.name().firstName();
     }
 
-    public static String generatePhone(Faker faker) {
-        return faker.phoneNumber().phoneNumber();
+    public static String generatePhone(String locale) {
+        Faker faker = new Faker(new Locale(locale));
+        return faker.numerify("+79#########");
     }
 
     public static class Registration {
-        private static Faker faker;
-
         private Registration() {
         }
 
         public static UserInfo generateUser(String locale) {
-            faker = new Faker(new Locale(locale));
-            String city = generateCity(faker);
-            String name = generateName(faker);
-            String phone = generatePhone(faker);
+            String city = generateCity();
+            String name = generateName(locale);
+            String phone = generatePhone(locale);
 
             return new UserInfo(city, name, phone);
         }
     }
 
-    @Value
     public static class UserInfo {
-        String city;
-        String name;
-        String phone;
+        private final String city;
+        private final String name;
+        private final String phone;
+
+        public UserInfo(String city, String name, String phone) {
+            this.city = city;
+            this.name = name;
+            this.phone = phone;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
     }
 }
