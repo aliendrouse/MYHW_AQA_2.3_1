@@ -1,6 +1,8 @@
 package ru.netology.delivery.test;
 
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selectors;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,11 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 class DeliveryTest {
+
+    @BeforeAll
+    static void setupAll() {
+        Configuration.headless = true;
+    }
 
     @BeforeEach
     void setup() {
