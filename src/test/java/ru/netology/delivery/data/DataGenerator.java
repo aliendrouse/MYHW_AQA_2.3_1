@@ -1,6 +1,7 @@
 package ru.netology.delivery.data;
 
 import com.github.javafaker.Faker;
+import lombok.Value;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -8,25 +9,21 @@ import java.util.Locale;
 import java.util.Random;
 
 public class DataGenerator {
-    private static final Random random = new Random();
-
     private DataGenerator() {
     }
 
     public static String generateDate(int shift) {
-        LocalDate date = LocalDate.now().plusDays(shift);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        return date.format(formatter);
+        return LocalDate.now().plusDays(shift).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     }
 
     public static String generateCity() {
-        String[] cities = {
+        String[] cities = new String[]{
                 "Москва", "Санкт-Петербург", "Казань", "Екатеринбург",
                 "Новосибирск", "Краснодар", "Владивосток", "Сочи",
                 "Уфа", "Пермь", "Воронеж", "Волгоград", "Красноярск",
                 "Саратов", "Тюмень", "Тольятти", "Ижевск", "Барнаул"
         };
-        return cities[random.nextInt(cities.length)];
+        return cities[new Random().nextInt(cities.length)];
     }
 
     public static String generateName(String locale) {
@@ -36,7 +33,7 @@ public class DataGenerator {
 
     public static String generatePhone(String locale) {
         Faker faker = new Faker(new Locale(locale));
-        return faker.numerify("+79#########");
+        return faker.phoneNumber().phoneNumber();
     }
 
     public static class Registration {
@@ -44,35 +41,14 @@ public class DataGenerator {
         }
 
         public static UserInfo generateUser(String locale) {
-            String city = generateCity();
-            String name = generateName(locale);
-            String phone = generatePhone(locale);
-
-            return new UserInfo(city, name, phone);
+            return new UserInfo(generateCity(), generateName(locale), generatePhone(locale));
         }
     }
 
+    @Value
     public static class UserInfo {
-        private final String city;
-        private final String name;
-        private final String phone;
-
-        public UserInfo(String city, String name, String phone) {
-            this.city = city;
-            this.name = name;
-            this.phone = phone;
-        }
-
-        public String getCity() {
-            return city;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getPhone() {
-            return phone;
-        }
+        String city;
+        String name;
+        String phone;
     }
 }
